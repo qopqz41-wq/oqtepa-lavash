@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oqtepa Lavash - Admin panel</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <section class="login-screen" id="loginScreen">
+        <form class="login-card" id="loginForm">
+            <div class="brand-mark">OL</div>
+            <p class="brand-name">Oqtepa Lavash</p>
+            <h1>Admin panel</h1>
+            <label for="adminLogin">Email</label>
+            <input id="adminLogin" type="email" autocomplete="username" required placeholder="admin@example.com">
+            <label for="adminPassword">Parol</label>
+            <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Parol">
+            <p class="login-error" id="loginError" hidden></p>
+            <button type="submit">Panelga kirish</button>
+        </form>
+    </section>
+
+    <div class="admin-layout" id="adminLayout" hidden>
+        <aside class="sidebar">
+            <div class="admin-brand">
+                <div class="brand-mark">OL</div>
+                <div>
+                    <strong>Oqtepa Lavash</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <nav>
+                <button class="nav-item active" data-view="dashboard" type="button">Statistika</button>
+                <button class="nav-item" data-view="orders" type="button">Buyurtmalar</button>
+                <button class="nav-item" data-view="catalog" type="button">Mahsulot katalogi</button>
+            </nav>
+            <button class="logout-btn" id="logoutButton" type="button">Chiqish</button>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div>
+                    <p>Boshqaruv paneli</p>
+                    <h1 id="pageTitle">Statistika</h1>
+                </div>
+                <a class="store-link" href="index.html">Do‘konga qaytish</a>
+            </header>
+
+            <section class="view active" id="dashboardView">
+                <div class="stats-grid">
+                    <article class="stat-card red">
+                        <span>Bugungi buyurtmalar</span>
+                        <strong id="todayOrders">0</strong>
+                        <small>Jami bugungi zakazlar</small>
+                    </article>
+                    <article class="stat-card green">
+                        <span>Bugungi tushum</span>
+                        <strong id="todayRevenue">0 so‘m</strong>
+                        <small>Jami to‘lov summasi</small>
+                    </article>
+                    <article class="stat-card yellow">
+                        <span>7 kunlik buyurtmalar</span>
+                        <strong id="weekOrders">0</strong>
+                        <small>So‘nggi haftadagi zakazlar</small>
+                    </article>
+                    <article class="stat-card blue">
+                        <span>Eng ko‘p zakaz qilinadigan</span>
+                        <strong id="topProduct">—</strong>
+                        <small id="topProductInfo">Bugungi mahsulot</small>
+                    </article>
+                </div>
+
+                <div class="dashboard-grid">
+                    <article class="panel-card chart-card">
+                        <div class="panel-heading">
+                            <h2>Haftalik savdo</h2>
+                            <span>So‘nggi 7 kun</span>
+                        </div>
+                        <div class="bar-chart" id="salesChart"></div>
+                    </article>
+                    <article class="panel-card">
+                        <div class="panel-heading">
+                            <h2>So‘nggi buyurtmalar</h2>
+                        </div>
+                        <div class="recent-orders" id="recentOrders"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="view" id="ordersView">
+                <div class="orders-toolbar">
+                    <div>
+                        <h2>Barcha buyurtmalar</h2>
+                        <p id="ordersCount">0 ta buyurtma</p>
+                    </div>
+                    <button class="clear-orders" id="clearOrdersButton" type="button">Tarixni tozalash</button>
+                </div>
+                <div class="orders-table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Buyurtma</th>
+                                <th>Sana</th>
+                                <th>Mijoz</th>
+                                <th>Mahsulotlar</th>
+                                <th>Chegirma</th>
+                                <th>Jami</th>
+                                <th>Holat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="view" id="catalogView">
+                <div class="orders-toolbar">
+                    <div>
+                        <h2>Mahsulot katalogi</h2>
+                        <p id="catalogCount">0 ta mahsulot</p>
+                    </div>
+                </div>
+                <form class="product-form panel-card" id="productForm">
+                    <h2 id="productFormTitle">Yangi mahsulot qo‘shish</h2>
+                    <div class="product-form-grid">
+                        <label>
+                            Mahsulot nomi
+                            <input id="productName" name="name" required maxlength="80" placeholder="Masalan, Katta lavash">
+                        </label>
+                        <label>
+                            Narxi (so‘m)
+                            <input id="productPrice" name="price" type="number" min="1" step="1" required placeholder="35000">
+                        </label>
+                        <label>
+                            Kategoriya
+                            <select id="productCategory" name="category" required>
+                                <option value="aksiya">Aksiya</option>
+                                <option value="lavash">Lavash</option>
+                                <option value="doner">Doner</option>
+                                <option value="burger">Burger</option>
+                                <option value="hotdog">Hot-dog</option>
+                                <option value="pitsa">Pitsa</option>
+                                <option value="sneki">Snek</option>
+                                <option value="ichimlik">Ichimlik</option>
+                            </select>
+                        </label>
+                        <label class="product-image-field">
+                            Rasm havolasi
+                            <input id="productImage" name="image" type="url" required placeholder="https://example.com/rasm.jpg">
+                        </label>
+                    </div>
+                    <p class="form-message" id="productFormMessage" role="alert" hidden></p>
+                    <div class="product-form-actions">
+                        <button class="save-product" type="submit">Saqlash</button>
+                        <button class="cancel-edit" id="cancelProductEdit" type="button" hidden>Bekor qilish</button>
+                    </div>
+                </form>
+                <div class="orders-table-wrap catalog-table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rasm</th>
+                                <th>Mahsulot</th>
+                                <th>Kategoriya</th>
+                                <th>Narxi</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="catalogTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <script src="catalog.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

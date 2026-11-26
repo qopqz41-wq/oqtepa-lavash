@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oqtepa Lavash</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">OL</div>
+            <span>Oqtepa Lavash</span>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Qidirish... (masalan: pitsa, lavash, hot-dog)">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+            </svg>
+        </div>
+
+        <div class="header-right">
+            <button class="admin-login-btn" id="adminLoginButton" type="button" title="Admin panel">
+                <span aria-hidden="true">⚙</span>
+            </button>
+            <button class="history-btn" id="historyButton" type="button" title="Buyurtmalar tarixi">
+                <span aria-hidden="true">↶</span>
+                <span>Buyurtmalar</span>
+            </button>
+            <button class="cart-btn">
+                🛒 <span id="cartCount">0</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar Categories -->
+        <aside class="sidebar">
+            <h3>Kategoriyalar</h3>
+            <ul class="category-list" id="categoryList">
+                <li class="category-item active" data-category="all">Barchasi</li>
+                <li class="category-item" data-category="aksiya">Aksiya</li>
+                <li class="category-item" data-category="lavash">Lavashlar</li>
+                <li class="category-item" data-category="doner">Donerlar</li>
+                <li class="category-item" data-category="burger">Burgerlar</li>
+                <li class="category-item" data-category="hotdog">Hot-doglar</li>
+                <li class="category-item" data-category="pitsa">Pitsalar</li>
+                <li class="category-item" data-category="sneki">Sneklar</li>
+                <li class="category-item" data-category="ichimlik">Ichimliklar</li>
+            </ul>
+        </aside>
+
+        <!-- Products -->
+        <main class="products-section">
+            <section class="store-hero" aria-label="Oqtepa Lavash taklifi">
+                <div class="store-hero-copy">
+                    <span class="hero-eyebrow">YANGI VA MAZALI</span>
+                    <h1>Sevimli ta’mlaringiz<br>eshigingizgacha</h1>
+                    <p>Oqtepa Lavash menyusidan tanlang — buyurtmangizni tez va qulay yetkazib beramiz.</p>
+                    <a class="hero-link" href="#productsGrid">Menyuni ko‘rish <span aria-hidden="true">↓</span></a>
+                </div>
+                <div class="hero-art" aria-hidden="true">
+                    <img src="https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=700&h=560&fit=crop" alt="">
+                    <span class="hero-sticker">Mazasi<br>yodingizda<br>qoladi!</span>
+                </div>
+                <div class="hero-perks" aria-label="Yetkazib berish xususiyatlari">
+                    <span><strong>🚀</strong> Tez yetkazib berish</span>
+                    <span><strong>🥬</strong> Har kuni yangi</span>
+                    <span><strong>💳</strong> Qulay to‘lov</span>
+                </div>
+            </section>
+            <p class="catalog-notice" id="catalogNotice" role="status" hidden>
+                Hozir boshlang‘ich katalog ko‘rsatilmoqda. Bu holatda buyurtmalar faqat shu qurilmada saqlanadi.
+                Supabase’ga buyurtma yuborish uchun SQL Editor’da <strong>supabase-setup.sql</strong> faylini ishga tushiring.
+            </p>
+            <div class="section-title">
+                <div>
+                    <span class="section-eyebrow">MAZALI TANLOV</span>
+                    <h2 id="currentCategory">Barcha mahsulotlar</h2>
+                </div>
+                <p id="productCount">0 ta mahsulot</p>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be injected here by JS -->
+            </div>
+
+            <div class="no-results" id="noResults" style="display: none;">
+                <h3>Hech narsa topilmadi 😕</h3>
+                <p>Boshqa so‘z bilan qidirib ko‘ring</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <img id="modalImage" src="" alt="">
+            <div class="modal-info">
+                <h3 id="modalTitle"></h3>
+                <p id="modalPrice"></p>
+                <button class="add-to-cart-btn">Savatga qo‘shish</button>
+            </div>
+        </div>
+    </div>
+
+    <dialog class="cart-modal" id="cartDialog" aria-labelledby="cartTitle">
+        <div class="cart-modal-header">
+            <h2 id="cartTitle">Savatcha</h2>
+            <button class="close-cart" id="closeCart" type="button" aria-label="Savatchani yopish">&times;</button>
+        </div>
+        <div class="cart-content" id="cartContent">
+            <div class="cart-items" id="cartItems" aria-live="polite"></div>
+            <div class="cart-total" id="cartTotal"></div>
+            <button class="checkout-btn" id="checkoutButton" type="button" hidden>Buyurtmani rasmiylashtirish</button>
+        </div>
+    </dialog>
+
+    <dialog class="checkout-dialog" id="checkoutDialog" aria-labelledby="checkoutTitle">
+        <button class="close-checkout" id="closeCheckout" type="button" aria-label="Oynani yopish">&times;</button>
+        <form class="checkout-form" id="checkoutForm">
+            <h2 id="checkoutTitle">Buyurtmani rasmiylashtirish</h2>
+            <div class="form-field">
+                <label for="orderPhone">Telefon raqamingiz</label>
+                <input id="orderPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+998 90 123 45 67" aria-describedby="phoneError">
+                <p class="checkout-error" id="phoneError" role="alert" hidden></p>
+            </div>
+            <div class="form-field">
+                <label for="orderAddress">Yetkazib berish manzili</label>
+                <input id="orderAddress" name="address" autocomplete="street-address" placeholder="Masalan, Amir Temur ko‘chasi, 25-uy">
+                <p class="checkout-error" id="addressError" role="alert" hidden></p>
+            </div>
+            <div class="form-field">
+                <label for="orderComment">Buyurtmangizga izoh <span>(ixtiyoriy)</span></label>
+                <textarea id="orderComment" name="comment" rows="3" placeholder="Qurshov, darvoza yoki maxsus so‘rov"></textarea>
+            </div>
+            <div class="promo-card">
+                <label for="promoCode">Promokod</label>
+                <div class="promo-row">
+                    <input id="promoCode" name="promo" placeholder="Promokodni kiriting">
+                    <button id="applyPromo" type="button">Qo‘llash</button>
+                </div>
+                <p class="promo-message" id="promoMessage" role="status"></p>
+            </div>
+            <div class="order-summary">
+                <div><span>Mahsulotlar</span><strong id="summarySubtotal">0 so‘m</strong></div>
+                <div class="discount-row" id="discountRow" hidden><span>Chegirma</span><strong id="summaryDiscount">−0 so‘m</strong></div>
+                <div class="delivery-row"><span>Yetkazish</span><strong id="summaryDelivery">20 000 so‘m</strong></div>
+                <div class="summary-total"><span>Jami</span><strong id="summaryTotal">0 so‘m</strong></div>
+            </div>
+            <p class="checkout-error" id="checkoutError" role="alert" hidden></p>
+            <button class="checkout-btn" type="submit">Buyurtmani tasdiqlash</button>
+        </form>
+        <div class="checkout-success" id="checkoutSuccess" role="status" hidden>
+            <div class="success-check" aria-hidden="true">✓</div>
+            <p class="success-eyebrow">MUVAFFAQIYATLI</p>
+            <h2>Buyurtmangiz qabul qilindi!</h2>
+            <p id="successOrderInfo"></p>
+            <img class="success-qr" id="successQr" alt="Buyurtma QR kodi">
+            <p class="qr-help">Buyurtmani tekshirish uchun QR kodni skaner qiling</p>
+            <button class="checkout-btn" id="closeSuccess" type="button">Yaxshi</button>
+        </div>
+    </dialog>
+
+    <dialog class="history-dialog" id="historyDialog" aria-labelledby="historyTitle">
+        <div class="history-header">
+            <div>
+                <p>Shaxsiy bo‘lim</p>
+                <h2 id="historyTitle">Buyurtmalar tarixi</h2>
+            </div>
+            <button class="close-history" id="closeHistory" type="button" aria-label="Yopish">&times;</button>
+        </div>
+        <div class="history-content" id="historyContent"></div>
+        <button class="history-close-btn" id="historyCloseButton" type="button">Yopish</button>
+    </dialog>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <script src="catalog.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
